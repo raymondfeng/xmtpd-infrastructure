@@ -1,14 +1,6 @@
 terraform {
   required_version = ">= 1.9"
 
-  cloud {
-    organization = "xmtp"
-
-    workspaces {
-      name = "xmtpd-infrastructure-example"
-    }
-  }
-
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -18,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = "us-east-1"
   default_tags {
     tags = {
       Environment = "testnet"

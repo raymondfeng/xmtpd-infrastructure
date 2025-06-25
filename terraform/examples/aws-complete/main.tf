@@ -5,7 +5,7 @@ locals {
 module "mls_validation_service" {
   # tflint-ignore: terraform_module_pinned_source
   source     = "github.com/xmtp/xmtpd-infrastructure//terraform/aws/xmtp-validation-service"
-  depends_on = [module.vpc, aws_service_discovery_private_dns_namespace.xmtp]
+  depends_on = [module.vpc, aws_route53_record.lb]
 
   env                              = terraform.workspace
   cluster_id                       = aws_ecs_cluster.this.id
@@ -22,7 +22,7 @@ module "mls_validation_service" {
 }
 
 module "xmtpd_api" {
-  depends_on = [aws_acm_certificate_validation.public]
+  depends_on = [data.aws_acm_certificate.public]
   # tflint-ignore: terraform_module_pinned_source
   source = "github.com/xmtp/xmtpd-infrastructure//terraform/aws/xmtpd-api"
 
@@ -31,7 +31,7 @@ module "xmtpd_api" {
   private_subnets = module.vpc.private_subnets
   docker_image    = var.xmtpd_docker_image
   cluster_id      = aws_ecs_cluster.this.id
-  certificate_arn = aws_acm_certificate.public.arn
+  certificate_arn = data.aws_acm_certificate.public.arn
 
   service_config = {
     validation_service_grpc_address = module.mls_validation_service.grpc_service_address

@@ -19,5 +19,5 @@ output "api_load_balancer_address" {
 
 output "api_domain_name" {
   description = "The domain name for the API"
-  value       = var.domain_name
+  value       = "xmtpd.${var.domain_name}"
 }
